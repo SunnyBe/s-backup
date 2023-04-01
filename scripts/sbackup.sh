@@ -10,7 +10,18 @@ function show_help {
     echo "-t, --target        specify the target remote server or cloud storage (default: Google Drive)"
     echo "-c, --compressor    specify the compressor tool to use (default: tar)"
     echo ""
-    echo "example: sbackup -t \"google drive\" -c "tar" ~/Documents/ ~/Pictures"
+    echo "example: sbackup -t \"google-drive\" -c \"tar\" ~/Documents/ ~/Pictures"
+}
+
+function isToolAvailable {
+    tool=$1
+    echo "tool check for: $tool"
+    if ! [ -x "$(command -v $tool)" ]
+    then
+        echo "$tool is not installed. Install $tool and try again"
+        exit 1
+    fi
+    echo "$tool is available. Upload will start"
 }
 
 # Parse command-line options
@@ -43,7 +54,7 @@ done
 # End program is target is not specified
 if [[ -z "$TARGET" ]] 
 then
-    echo "Target not specified. Check backup/ folder for compressed file"
+    echo "Target not specified."
     exit 1
 fi
 
@@ -74,12 +85,12 @@ else
 fi
 
 # Uplaod compressed file to remote server using rsync
-if [ "$TARGET" == "Google Drive" ]
+if [ "$TARGET" == "google-drive" ]
 then
     # Upload to Google Drive using rclone
+    isToolAvailable "rclone"
     rclone copy $BACKUP_FILENAME remote:backup/
 else
     # Upload to remote server using scp
-    echo "uploading file to $TARGET"
     scp $BACKUP_FILENAME "$TARGET:/backup"
 fi
