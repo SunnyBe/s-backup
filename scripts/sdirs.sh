@@ -1,5 +1,5 @@
 #!/bin/bash
-# This scripts prompts users to provide list of directories or files and a corresponding tar.gz compressed file will be created
+# This scripts prompts users to provide list of directories or files and a corresponding tar.gz compressed file will be
 
 SCRIPT_NAME=$(basename $0)
 echo "running: $SCRIPT_NAME"
@@ -27,5 +27,3 @@ do
         echo "$arg - File or directory is invalid or does not exist"
     fi
 done
-
-
